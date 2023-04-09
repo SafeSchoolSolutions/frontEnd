@@ -54,15 +54,15 @@ export default function MainNavigator() {
             ) : (
               <>
                 <Stack.Screen
-                  name="homeScreen"
+                  name="Home"
                   component={HomeScreens}
                   options={{ headerShown: false }}
                 />
 
                 <Stack.Screen
-                  name="mapScreen"
+                  name="Emergency Map"
                   component={MapScreen}
-                  options={{ headerShown: false }}
+                  options={{ headerShown: true }}
                 />
                 <Stack.Screen
                   name="emergencyScreen"

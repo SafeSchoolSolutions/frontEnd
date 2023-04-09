@@ -21,7 +21,7 @@ export default function Navigator() {
     <NavigationContainer independent={true}>
       <Stack.Navigator>
         <Stack.Screen
-          name="homeScreen"
+          name="Home"
           component={HomeScreens}
           options={{ headerShown: false }}
         />
