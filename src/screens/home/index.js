@@ -4,20 +4,84 @@ import {
   Text,
   StyleSheet,
   FlatList,
-  Animated,
   TouchableOpacity,
+  TextInput,
 } from "react-native";
+import Animated, {
+  SlideInDown,
+  SlidenInUp,
+  SlideInLeft,
+  SlideInRight,
+  LightSpeedOutLeft,
+  LightSpeedOutRight,
+  SlideOutUp,
+  SlideOutDown,
+  Transition,
+  SlideOutRight,
+  SlideOutLeft,
+} from "react-native-reanimated";
+
 import { goToSettings, startEmergency } from "../../redux/actions";
 import { StackActions, useNavigation } from "@react-navigation/native";
+import { createStudent } from "../../redux/actions";
 import * as Icon from "react-native-feather";
 import { MotiView } from "moti";
 import { Easing } from "react-native-reanimated";
 import MapScreen from "./map";
+import Modal from "react-native-modal";
+import styles from "./styles";
 export default function HomeScreens() {
   const navigation = useNavigation();
-  console.log("I wanna die");
+
+  const [name, setName] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [isModalVisible, setIsModalVisible] = React.useState(false);
+  const handleModal = () => setIsModalVisible(() => !isModalVisible);
+
   return (
     <View style={{ flex: 1, backgroundColor: "#3d5a80" }}>
+      <Modal isVisible={isModalVisible}>
+        <View
+          style={{
+            justifyContent: "center",
+            alignContent: "center",
+            flex: 1,
+          }}
+        >
+          <Text style={styles.header}>Name</Text>
+          <View style={{ opacity: 1 }}>
+            <TextInput
+              placeholderTextColor={"white"}
+              placeholder={"Ex: John Smith"}
+              style={styles.inputContainer}
+              onChangeText={(value) => setName(value)}
+            />
+          </View>
+          <Text style={styles.header}>Phone Number</Text>
+          <View style={{ opacity: 1 }}>
+            <TextInput
+              placeholderTextColor={"white"}
+              placeholder={"Ex: +14084311024"}
+              style={styles.inputContainer}
+              onChangeText={(value) => setPhoneNumber(value)}
+            />
+          </View>
+          <View style={styles.buttonContainer}>
+            <TouchableOpacity
+              style={styles.button}
+              onPress={() => {
+                createStudent(name, phoneNumber);
+                handleModal;
+              }}
+            >
+              <Text style={styles.circleText}>Add</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.button} onPress={handleModal}>
+              <Text style={styles.circleText}>Close</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
       <View
         style={{
           flexDirection: "row",
@@ -28,7 +92,11 @@ export default function HomeScreens() {
           flex: 0.21,
         }}
       >
-        <View style={{}}>
+        <Animated.View
+          delay={500}
+          entering={SlideInLeft.duration(1500)}
+          exiting={SlideOutRight.duration(1500)}
+        >
           <TouchableOpacity
             style={{}}
             onPress={() => {
@@ -37,26 +105,30 @@ export default function HomeScreens() {
           >
             <Icon.Settings color={"#e0fbfc"} width={50} height={50} />
           </TouchableOpacity>
-        </View>
+        </Animated.View>
         <View style={{ paddingHorizontal: 125 }}></View>
         <TouchableOpacity
           onPress={() => {
             navigation.navigate("mapScreen");
           }}
         >
-          <View style={{}}>
+          <Animated.View
+            delay={500}
+            entering={SlideInRight.duration(1500)}
+            exiting={SlideOutLeft.duration(1500)}
+            style={{}}
+          >
             <Icon.MapPin color={"#e0fbfc"} width={50} height={50} />
-          </View>
+          </Animated.View>
         </TouchableOpacity>
       </View>
 
       <View
-        style={{ flex: 0.5, alignContent: "center", justifyContent: "center" }}
+        style={{ flex: 0.7, alignContent: "center", justifyContent: "center" }}
       >
         <TouchableOpacity
-          style={styles.emergencyButton}
+          style={styless.emergencyButton}
           onPress={async () => {
-            console.log("STARTING EMERGENCY BOYS!!!!");
             await startEmergency();
             navigation.navigate("emergencyScreenForm");
           }}
@@ -75,11 +147,11 @@ export default function HomeScreens() {
                   loop: true,
                 }}
                 key={index}
-                style={[StyleSheet.absoluteFillObject, styles.dot]}
+                style={[StyleSheet.absoluteFillObject, styless.dot]}
               />
             );
           })}
-          <Text style={styles.emergencyText}>Emergency</Text>
+          <Text style={styless.emergencyText}>Emergency</Text>
         </TouchableOpacity>
       </View>
       <View
@@ -88,11 +160,24 @@ export default function HomeScreens() {
           justifyContent: "center",
         }}
       ></View>
+      <Animated.View
+        delay={500}
+        entering={SlideInLeft.duration(1500)}
+        exiting={SlideOutRight.duration(1500)}
+        style={{}}
+      >
+        <TouchableOpacity
+          onPress={setIsModalVisible}
+          style={{ justifyContent: "flex-end", marginTop: 50 }}
+        >
+          <Icon.Plus color={"#e0fbfc"} width={50} height={50} />
+        </TouchableOpacity>
+      </Animated.View>
     </View>
   );
 }
 
-const styles = StyleSheet.create({
+const styless = StyleSheet.create({
   container: {
     backgroundColor: "#3d5a80",
     flex: 1,

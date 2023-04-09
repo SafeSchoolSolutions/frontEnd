@@ -21,7 +21,7 @@ export default function EmergencyScreenForm() {
   };
   const slides = [
     {
-      id: "1",
+      id: "5",
       type: "5",
     },
   ];
@@ -67,7 +67,6 @@ export default function EmergencyScreenForm() {
         />
       </View>
 
-      <Paginator data={slides} scrollX={scrollX} />
       <NextButton
         scrollTo={scrollTo}
         percentage={(currentIndex + 1) * (100 / slides.length)}

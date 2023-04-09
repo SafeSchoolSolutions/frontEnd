@@ -24,6 +24,7 @@ import { updateUserName } from "../../redux/actions/auth";
 import * as Notifications from "expo-notifications";
 import { useNavigation } from "@react-navigation/native";
 import { getFormCompleted } from "../../redux/actions/auth";
+import Modal from "react-native-modal";
 import {
   setParentOrChild,
   getUsersExpoToken,
@@ -39,6 +40,8 @@ export default function PickerScreen() {
     },
   });
   const navigation = useNavigation();
+  const [isModalVisible, setIsModalVisible] = React.useState(false);
+  const handleModal = () => setIsModalVisible(() => !isModalVisible);
   const [currentIndex, setCurrentIndex] = useState(0);
   const scrollX = useRef(new Animated.Value(0)).current;
   const slidesRef = useRef(null);
@@ -182,6 +185,8 @@ export default function PickerScreen() {
 
       {hasParent && (
         <View style={styles.container}>
+        
+       
           <View style={{ flex: 3 }}>
             <FlatList
               data={data}

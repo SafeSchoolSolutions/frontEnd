@@ -43,9 +43,23 @@ import {
   setEmergencyHeightDB,
   setEmergencyWeightDB,
   setEmergencySexDB,
+  setEmergencyStudentsListDB,
 } from "../redux/actions/auth";
 import { checkCode } from "../redux/actions/auth";
 import * as Clipboard from "expo-clipboard";
+import Animated, {
+  SlideInDown,
+  SlidenInUp,
+  SlideInLeft,
+  SlideInRight,
+  LightSpeedOutLeft,
+  LightSpeedOutRight,
+  SlideOutUp,
+  SlideOutDown,
+  Transition,
+  SlideOutRight,
+  SlideOutLeft,
+} from "react-native-reanimated";
 import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
 import "firebase/compat/firestore";
@@ -58,13 +72,13 @@ export default OnboardingItem = ({ item, scrollTo }) => {
   const [emergencyWeight, setEmergencyWeight] = useState(null);
   const [location, setLocation] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
-
+  const [injuredStudentList, setInjuredStudentList] = useState([]);
   const [painType, setPainType] = useState(null);
 
   const [fastingBloodSugar, setFastingBloodSugar] = useState(null);
   const [ecg, setEcg] = useState(null);
   const { width } = useWindowDimensions();
-
+  const [emergencyData, setEmergencyData] = useState(null);
   const [emergencySelected, setEmergencySelected] = React.useState([]);
   const [selected, setSelected] = useState([]);
   var wage = "";
@@ -73,20 +87,58 @@ export default OnboardingItem = ({ item, scrollTo }) => {
   const [studentCount, setStudentCount] = useState(null);
   const [phoneNumber, setPhoneNumber] = useState(null);
   const [extraInfo, setExtraInfo] = useState(null);
+  const [emergencyArray, setEmergencyArray] = useState(null);
   const sexArray = [
     { key: "1", value: "Male" },
     { key: "2", value: "Female" },
   ];
+  const susArray = [
+    { key: 1, value: "Dhdh Dhdh" },
+    { key: 2, value: "Dhdh Dhdh" },
+    { key: 3, value: "Dhdh Dhdh" },
+  ];
   const [adress, setAdress] = useState(null);
   const [emergencyFastingBloodSugar, setEmergencyFastingBloodSugar] =
     useState(null);
+  const getNamesFromFirestore = async () => {
+    const names = [];
+    console.log("Trying to get data");
+    try {
+      const snapshot = await firebase
+        .firestore()
+        .collection("users")
+        .doc(firebase.auth().currentUser.uid)
+        .collection("students")
+        .get();
+      let i = 1;
+      snapshot.forEach((doc) => {
+        const data = doc.data();
+        if (data.name) {
+          names.push({ key: i, value: data.name });
+          i++;
+        }
+      });
+    } catch (error) {
+      console.error("Error getting documents: ", error);
+    }
+    console.log("HERE IS THE DATA" + JSON.stringify(names));
+    return names;
+  };
 
-  const codeCheck = async (codee) => {
+  useEffect(() => {
+    const fetchData = async () => {
+      const names = await getNamesFromFirestore();
+      setEmergencyArray(names);
+    };
+    fetchData();
+  }, [item.id]);
+
+  const codeCheck = async ( ) => {
     console.log("Checking code : " + code);
     const snapShot = await firebase
       .firestore()
       .collection("users")
-      .where("code", "==", parseInt(code))
+      .where("code", "==", String(code))
       .get()
       .then(console.log(code + "FUCKKK"));
 
@@ -111,10 +163,34 @@ export default OnboardingItem = ({ item, scrollTo }) => {
   };
   // age sex race height weight
   useEffect(() => {
+    const unsubscribe = firebase
+      .firestore()
+      .collection("emergencies")
+      .doc(firebase.auth().currentUser.uid)
+      .onSnapshot(
+        (doc) => {
+          console.log("Document data:", doc.data());
+        },
+        (error) => {
+          console.log("Error getting document:", error);
+        }
+      );
+
+    return () => {
+      unsubscribe();
+    };
+  }, []);
+  useEffect(() => {
     if (emergencyAge) {
       setEmergencyAgeDB(emergencyAge);
     }
   }, [emergencyAge]);
+  useEffect(() => {
+    if (injuredStudentList[0]) {
+      console.log("In useEffect, injuredStudentList:", injuredStudentList);
+      setEmergencyStudentsListDB(injuredStudentList);
+    }
+  }, [injuredStudentList]);
   useEffect(() => {
     if (emergencySex) {
       setEmergencySexDB(emergencySex);
@@ -368,11 +444,28 @@ export default OnboardingItem = ({ item, scrollTo }) => {
           }}
           dropdownTextStyles={{ color: "#e0fbfc" }}
         />
+        <Text style={styles.YesNoText}>Select Injured Students</Text>
+        <MultipleSelectList
+          setSelected={(val) => setInjuredStudentList(val)}
+          data={emergencyArray}
+          save="value"
+          label="Students:"
+          maxHeight={200}
+          search={true}
+          boxStyles={{
+            backgroundColor: "#98c1d9",
+            borderColor: "#e0fbfc",
+          }}
+          inputStyles={{ color: "#e0fbfc" }}
+          dropdownStyles={{
+            backgroundColor: "#98c1d9",
+            borderColor: "#e0fbfc",
+          }}
+          dropdownTextStyles={{ color: "#e0fbfc" }}
+        />
       </View>
     );
   }
-
-
 };
 
 const styles = StyleSheet.create({

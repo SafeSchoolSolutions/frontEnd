@@ -14,15 +14,17 @@ export default function Chat() {
   const navigation = useNavigation();
   const stateRef = useRef();
   stateRef.responses = responses;
+
   useEffect(() => {
     const unsubscribe = firebase
       .firestore()
       .collection("emergencies")
       .doc(firebase.auth().currentUser.uid)
-      .get((snap) => {
-      
-        const response_list = snap.data()["responses"];
-        
+      .onSnapshot((snapshot) => {
+        const response_list = snapshot.data()["responses"];
+
+        console.log("Chat Responses", response_list);
+
         for (let i = 0; i < response_list.length; i++) {
           response_list[i] = {
             _id: i + 1,
@@ -38,7 +40,7 @@ export default function Chat() {
         }
 
         setMessages(response_list.reverse());
-       
+
         if (loading) {
           setLoading(false);
         }

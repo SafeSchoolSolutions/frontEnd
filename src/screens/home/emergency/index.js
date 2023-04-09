@@ -17,8 +17,11 @@ import Animated, {
 } from "react-native-reanimated";
 import { StackActions, useNavigation } from "@react-navigation/native";
 import * as Icon from "react-native-feather";
+
+import Modal from "react-native-modal";
 import { selfReport } from "../../../redux/actions";
-export default function EmergencyScreen() { //USELESS NOW
+export default function EmergencyScreen() {
+  //USELESS NOW
   const navigation = useNavigation();
   const doesJitHaveHeartDisease = async () => {
     await selfReport();
@@ -31,6 +34,7 @@ export default function EmergencyScreen() { //USELESS NOW
       entering={FadeIn.duration(1000)}
       style={{ flex: 1, backgroundColor: "#ee6c4d" }}
     >
+     
       <View style={{ flex: 0.2 }}></View>
       <View
         style={{
