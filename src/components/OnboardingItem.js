@@ -462,7 +462,7 @@ export default OnboardingItem = ({ item, scrollTo }) => {
             console.log("setting age too : " + emergencyAge);
           }}
           style={styles.textInput}
-          placeholder="Age"
+          placeholder="Estimated Age"
           placeholderTextColor={"#98c1d9"}
         />
 
@@ -475,13 +475,13 @@ export default OnboardingItem = ({ item, scrollTo }) => {
         <TextInput
           onChangeText={(text) => setEmergencyWeight(text)}
           style={styles.textInput}
-          placeholder="Weight(lb's)"
+          placeholder="Estimated Weight"
           placeholderTextColor={"#98c1d9"}
         />
         <TextInput
           onChangeText={(text) => setEmergencyHeight(text)}
           style={styles.textInput}
-          placeholder="Height(Estimate)"
+          placeholder="Estimated Height"
           placeholderTextColor={"#98c1d9"}
         />
         <Text style={styles.YesNoText}>Sex</Text>

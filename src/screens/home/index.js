@@ -98,7 +98,7 @@ export default function HomeScreens() {
           exiting={SlideOutRight.duration(1500)}
         >
           <TouchableOpacity
-            style={{}}
+            style={{marginTop: 20}}
             onPress={() => {
               goToSettings();
             }}
@@ -107,7 +107,8 @@ export default function HomeScreens() {
           </TouchableOpacity>
         </Animated.View>
         <View style={{ paddingHorizontal: 125 }}></View>
-        <TouchableOpacity
+        <TouchableOpacity 
+          style={{marginTop: 20}}
           onPress={() => {
             navigation.navigate("Emergency Map");
           }}

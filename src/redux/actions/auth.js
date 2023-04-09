@@ -213,14 +213,17 @@ export const startEmergency = async () => {
     }
   }
   let location = await Location.getCurrentPositionAsync({});
-  const code = (
+
+
+  const current_user_data = (
     await firebase
       .firestore()
       .collection("users")
       .doc(firebase.auth().currentUser.uid)
       .get()
-  ).data().code;
+  ).data()
 
+  console.log("current user data", current_user_data)
   const emergencyDoc = await firebase
     .firestore()
     .collection("emergencies")
@@ -229,7 +232,9 @@ export const startEmergency = async () => {
   if (emergencyDoc.exists) {
     emergencyDoc.ref
       .update({
-        code: code,
+        location: current_user_data.location,
+        address: current_user_data.address,
+        code: current_user_data.code,
         latitude: location.coords.latitude,
         longitude: location.coords.longitude,
       })
@@ -237,7 +242,10 @@ export const startEmergency = async () => {
   } else
     emergencyDoc.ref
       .set({
-        code: code,
+        injuredStudents: [],
+        location: current_user_data.location,
+        address: current_user_data.address,
+        code: current_user_data.code,
         latitude: location.coords.latitude,
         longitude: location.coords.longitude,
         responses: [],
