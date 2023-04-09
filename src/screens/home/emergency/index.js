@@ -18,13 +18,14 @@ import Animated, {
 import { StackActions, useNavigation } from "@react-navigation/native";
 import * as Icon from "react-native-feather";
 import { selfReport } from "../../../redux/actions";
-export default function EmergencyScreen() {
+export default function EmergencyScreen() { //USELESS NOW
   const navigation = useNavigation();
   const doesJitHaveHeartDisease = async () => {
     await selfReport();
     navigation.navigate("chatScreen");
   };
   console.log("wasd");
+  navigation.navigate("emergencyScreenForm");
   return (
     <Animated.View
       entering={FadeIn.duration(1000)}

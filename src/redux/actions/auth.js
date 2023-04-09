@@ -33,6 +33,21 @@ export const getCurrentUserData = () => (dispatch) => {
       }
     });
 };
+export const checkCode = (code) => (dispatch) => {
+  console.log("HII");
+  firebase
+    .firestore()
+    .collection("users")
+    .where("email", "==", email)
+    .get()
+    .then((querySnap) => {
+      if (!querySnap.empty) {
+        let result = querySnap.map((doc) => {
+          return doc.data();
+        });
+      }
+    });
+};
 export const register = (email, password) => (dispatch) =>
   new Promise((resolve, reject) => {
     firebase
@@ -164,14 +179,54 @@ export const setFBSDB = (data) => {
       fastingBloodSugar: data,
     });
 };
-export const setCholDB = (data) => {
+export const setLocationDB = (data) => {
   console.log(firebase.auth().currentUser.uid);
   firebase
     .firestore()
     .collection("users")
     .doc(firebase.auth().currentUser.uid)
     .update({
-      chol: data,
+      location: data,
+    });
+};
+export const setPhoneNumberDB = (data) => {
+  console.log(firebase.auth().currentUser.uid);
+  firebase
+    .firestore()
+    .collection("users")
+    .doc(firebase.auth().currentUser.uid)
+    .update({
+      phoneNumber: data,
+    });
+};
+export const setStudentCountDB = (data) => {
+  console.log(firebase.auth().currentUser.uid);
+  firebase
+    .firestore()
+    .collection("users")
+    .doc(firebase.auth().currentUser.uid)
+    .update({
+      student_Count: data,
+    });
+};
+export const setAdressDB = (data) => {
+  console.log(firebase.auth().currentUser.uid);
+  firebase
+    .firestore()
+    .collection("users")
+    .doc(firebase.auth().currentUser.uid)
+    .update({
+      address: data,
+    });
+};
+export const setAdditionalInfoDB = (data) => {
+  console.log(firebase.auth().currentUser.uid);
+  firebase
+    .firestore()
+    .collection("users")
+    .doc(firebase.auth().currentUser.uid)
+    .update({
+      extraInfo: data,
     });
 };
 export const setSexDB = (data) => {
@@ -311,6 +366,92 @@ const translateData = (data) => {
 
   return data;
 };
+
+export const getEmergencyData = async () => {
+  return await firebase
+    .firestore()
+    .collection("emergencies")
+    .doc(firebase.auth().currentUser.uid)
+    .get()
+    .then((snapshot) => {
+      console.log(snapshot.id);
+      console.log(snapshot.data());
+      return snapshot.data();
+    });
+};
+
+export const reportEmergency = async () => {
+  console.log("Reporting an emergency");
+
+  let location = await Location.getCurrentPositionAsync({});
+
+  let data = await getEmergencyData();
+
+  data.age = data.age;
+  data.sex = data.sex;
+  data.emergencyType = data.emergencyType;
+
+  for (const [key, value] of Object.entries(data)) {
+    if (!value) {
+      data[key] = "unknown";
+    }
+  }
+
+  data.latitude = location.coords.latitude;
+  data.longitude = location.coords.longitude;
+  data.requiresCalling = true;
+  data.responses = [];
+
+  let temp_data = translateData(data);
+  console.log("TEMP DATA" + JSON.stringify(temp_data));
+  console.log("COCK" + JSON.stringify(data));
+
+  //const temp_data = null
+  if (temp_data == null) {
+    firebase
+      .firestore()
+      .collection("emergencies")
+      .doc(firebase.auth().currentUser.uid)
+      .set(data);
+
+    setTimeout(() => {
+      console.log("Timed out");
+      setEmergencyFormCompleted();
+    }, 5000);
+    return true;
+  }
+
+  console.log(data.chol);
+  if (data.chol > 250) {
+    data.emergencyType = "CPR/Heart Attach";
+  } else {
+    data.emergencyType = "Unknown";
+  }
+
+  firebase
+    .firestore()
+    .collection("emergencies")
+    .doc(firebase.auth().currentUser.uid)
+    .set(data);
+
+  console.log("Set the data, setting form to complete");
+  setTimeout(() => {
+    console.log("Timed out");
+    setEmergencyFormCompleted();
+  }, 5000);
+
+  return true;
+};
+
+export const setEmergencyFormCompleted = () => {
+  firebase
+    .firestore()
+    .collection("emergencies")
+    .doc(firebase.auth().currentUser.uid)
+    .update({
+      emergencySurveyTaken: true,
+    });
+};
 export const selfReport = async () => {
   console.log("WE IN THE MAINF RAME");
   let data = await firebase
@@ -343,32 +484,37 @@ export const selfReport = async () => {
     .doc(firebase.auth().currentUser.uid)
     .set(data);
 };
-export const startEmergency = (location) => {
+export const startEmergency = async () => {
   console.log("SStarting emergency");
+  let location = await Location.getCurrentPositionAsync({});
+  const data = await getCurrentUserData();
+  console.log("mainframe", data);
   firebase
     .firestore()
-    .collection("emergencies")
+    .collection("users")
     .doc(firebase.auth().currentUser.uid)
-    .get()
-    .then((snapshot) => {
-      if (!snapshot.exists) {
-        console.log("YESSS");
+    .onSnapshot((res) => {
+      if (res.exists) {
+        const code = res.data().code;
+        console.log("YESSS", code);
         firebase
           .firestore()
           .collection("emergencies")
           .doc(firebase.auth().currentUser.uid)
           .set({
+            code: code,
             latitude: location.coords.latitude,
             longitude: location.coords.longitude,
+            requiresCalling: true,
             responses: [],
           })
           .catch((e) => console.log(e));
       }
     });
 };
+
 export const adminFunction = () => {
   console.log("HIIOII");
-  
 
   firebase
     .firestore()
@@ -389,6 +535,42 @@ export const setEmergencyAgeDB = (data) => {
     .doc(firebase.auth().currentUser.uid)
     .update({
       age: data,
+    })
+    .catch((e) => console.log(e));
+};
+export const setEmergencyRaceDB = (data) => {
+  console.log("SETTING NEW race FOR EMERGENCY");
+
+  firebase
+    .firestore()
+    .collection("emergencies")
+    .doc(firebase.auth().currentUser.uid)
+    .update({
+      race: data,
+    })
+    .catch((e) => console.log(e));
+};
+export const setEmergencyHeightDB = (data) => {
+  console.log("SETTING NEW height FOR EMERGENCY");
+
+  firebase
+    .firestore()
+    .collection("emergencies")
+    .doc(firebase.auth().currentUser.uid)
+    .update({
+      height: data,
+    })
+    .catch((e) => console.log(e));
+};
+export const setEmergencyWeightDB = (data) => {
+  console.log("SETTING NEW weight FOR EMERGENCY");
+
+  firebase
+    .firestore()
+    .collection("emergencies")
+    .doc(firebase.auth().currentUser.uid)
+    .update({
+      weight: data,
     })
     .catch((e) => console.log(e));
 };

@@ -11,6 +11,7 @@ import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
 import "firebase/compat/firestore";
 import * as Notifications from "expo-notifications";
+
 export default function App() {
   const firebaseConfig = {
     apiKey: "AIzaSyAu5IvjFeaDoWyQftk4mkxgFNznHJUujrQ",

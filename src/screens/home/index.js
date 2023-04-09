@@ -7,7 +7,7 @@ import {
   Animated,
   TouchableOpacity,
 } from "react-native";
-import { goToSettings } from "../../redux/actions";
+import { goToSettings, startEmergency } from "../../redux/actions";
 import { StackActions, useNavigation } from "@react-navigation/native";
 import * as Icon from "react-native-feather";
 import { MotiView } from "moti";
@@ -20,28 +20,45 @@ export default function HomeScreens() {
     <View style={{ flex: 1, backgroundColor: "#3d5a80" }}>
       <View
         style={{
-          flex: 0.3,
-          marginTop: 40,
           flexDirection: "row",
-          justifyContent: "flex-end",
+          paddingHorizontal: 100,
+          marginHorizontal: 20,
+          paddingTop: 30,
+          justifyContent: "center",
+          flex: 0.21,
         }}
       >
+        <View style={{}}>
+          <TouchableOpacity
+            style={{}}
+            onPress={() => {
+              goToSettings();
+            }}
+          >
+            <Icon.Settings color={"#e0fbfc"} width={50} height={50} />
+          </TouchableOpacity>
+        </View>
+        <View style={{ paddingHorizontal: 125 }}></View>
         <TouchableOpacity
-          style={{ marginRight: 30 }}
           onPress={() => {
-            goToSettings();
+            navigation.navigate("mapScreen");
           }}
         >
-          <Icon.Settings color={"#e0fbfc"} width={32} height={32} />
+          <View style={{}}>
+            <Icon.MapPin color={"#e0fbfc"} width={50} height={50} />
+          </View>
         </TouchableOpacity>
       </View>
+
       <View
         style={{ flex: 0.5, alignContent: "center", justifyContent: "center" }}
       >
         <TouchableOpacity
           style={styles.emergencyButton}
-          onPress={() => {
-            navigation.navigate("emergencyScreen");
+          onPress={async () => {
+            console.log("STARTING EMERGENCY BOYS!!!!");
+            await startEmergency();
+            navigation.navigate("emergencyScreenForm");
           }}
         >
           {[...Array(10).keys()].map((index) => {
@@ -70,33 +87,7 @@ export default function HomeScreens() {
           alignContent: "center",
           justifyContent: "center",
         }}
-      >
-        <Text
-          style={{
-            fontSize: 40,
-            color: "#e0fbfc",
-            justifyContent: "center",
-            textAlign: "center",
-          }}
-        >
-          ↓ Jump To Map ↓
-        </Text>
-        <TouchableOpacity
-          onPress={() => {
-            navigation.navigate("mapScreen");
-          }}
-        >
-          <View
-            style={{
-              justifyContent: "center",
-              alignContent: "center",
-              marginHorizontal: 165,
-            }}
-          >
-            <Icon.MapPin color={"#e0fbfc"} width={50} height={50} />
-          </View>
-        </TouchableOpacity>
-      </View>
+      ></View>
     </View>
   );
 }
@@ -109,7 +100,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   emergencyText: {
-    fontSize: 28,
+    fontSize: 22,
     fontWeight: "500",
     color: "#3d5a80",
     textAlign: "center",
@@ -122,7 +113,7 @@ const styles = StyleSheet.create({
     borderRadius: 100,
     borderColor: "#3d5a80",
     borderWidth: 2,
-    backgroundColor: "#ee6c4d",
+    backgroundColor: "#FF0000",
     justifyContent: "center",
   },
   dot: {

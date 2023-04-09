@@ -50,6 +50,66 @@ export default function AuthScreen() {
     };
   });
 
+  // export const reportEmergency = async () => {
+  //   console.log("Reporting an emergency");
+
+  //   let data = await getEmergencyData();
+
+  //   data.age = 12;
+  //   data.sex = data.sex;
+  //   data.emergencyType = data.emergencyType;
+
+  //   for (const [key, value] of Object.entries(data)) {
+  //     if (!value) {
+  //       data[key] = "unknown";
+  //     }
+  //   }
+
+  //   data.latitude = location.coords.latitude;
+  //   data.longitude = location.coords.longitude;
+  //   data.requiresCalling = true;
+  //   data.responses = [];
+
+  //   let temp_data = translateData(data);
+  //   console.log("TEMP DATA" + JSON.stringify(temp_data));
+  //   console.log("COCK" + JSON.stringify(data));
+
+  //   //const temp_data = null
+  //   if (temp_data == null) {
+  //     firebase
+  //       .firestore()
+  //       .collection("emergencies")
+  //       .doc(firebase.auth().currentUser.uid)
+  //       .set(data);
+
+  //     setTimeout(() => {
+  //       console.log("Timed out");
+  //       setEmergencyFormCompleted();
+  //     }, 5000);
+  //     return true;
+  //   }
+
+  //   console.log(data.chol);
+  //   if (data.chol > 250) {
+  //     data.emergencyType = "CPR/Heart Attach";
+  //   } else {
+  //     data.emergencyType = "Unknown";
+  //   }
+
+  //   firebase
+  //     .firestore()
+  //     .collection("emergencies")
+  //     .doc(firebase.auth().currentUser.uid)
+  //     .set(data);
+
+  //   console.log("Set the data, setting form to complete");
+  //   setTimeout(() => {
+  //     console.log("Timed out");
+  //     setEmergencyFormCompleted();
+  //   }, 5000);
+
+  //   return true;
+  // };
   const buttonsAnimatedStyle = useAnimatedStyle(() => {
     const interpolation = interpolate(imagePosition.value, [0, 1], [250, 0]);
     return {
@@ -108,7 +168,7 @@ export default function AuthScreen() {
   const handleLogin = () => {
     dispatch(login(emailAddress, password))
       .then(() => {
-        console.log("login successful");
+        console.log("Login successful");
       })
       .catch((e) => {
         alert(e);
@@ -118,8 +178,10 @@ export default function AuthScreen() {
   const handleRegister = () => {
     dispatch(register(emailAddress, password))
       .then(() => {
-        console.log("register successful");
-        console.log(" SRTTTTT " + JSON.stringify(currentUserObj));
+        console.log(
+          "Register successful with user ",
+          JSON.stringify(currentUserObj)
+        );
       })
       .catch((e) => {
         alert(e);
@@ -179,7 +241,7 @@ export default function AuthScreen() {
                   fontStyle: "sans-serif",
                 }}
               >
-                ZeroResponders
+                ProtectEd
               </Text>
             </View>
           </View>

@@ -7,25 +7,22 @@ import {
   TouchableOpacity,
   Animated,
 } from "react-native";
-
+import { setEmergencyForm, reportEmergency } from "../../../../redux/actions";
 import { StackActions, useNavigation } from "@react-navigation/native";
 import Paginator from "../../../../components/Paginator";
 import NextButton from "../../../../components/NextButton";
 import OnboardingItem from "../../../../components/OnboardingItem";
 import * as Icon from "react-native-feather";
+import Chat from "../emergencyChat";
 export default function EmergencyScreenForm() {
+  const navigation = useNavigation();
+  const doTanujTHing = async () => {
+    navigation.navigate("chatScreen");
+  };
   const slides = [
     {
       id: "1",
       type: "5",
-    },
-    {
-      id: "2",
-      type: "6",
-    },
-    {
-      id: "3",
-      type: "7",
     },
   ];
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -42,7 +39,7 @@ export default function EmergencyScreenForm() {
     if (currentIndex < slides.length - 1) {
       slidesRef.current.scrollToIndex({ index: currentIndex + 1 });
     } else {
-      console.log("Last item.");
+      doTanujTHing();
     }
   };
 
