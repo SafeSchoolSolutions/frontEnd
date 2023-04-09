@@ -109,7 +109,7 @@ export default function HomeScreens() {
         <View style={{ paddingHorizontal: 125 }}></View>
         <TouchableOpacity
           onPress={() => {
-            navigation.navigate("mapScreen");
+            navigation.navigate("Emergency Map");
           }}
         >
           <Animated.View

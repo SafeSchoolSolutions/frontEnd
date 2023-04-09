@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "ZeroResponder",
-    "slug": "zeroresponder",
+    "name": "ProtectEd",
+    "slug": "protected",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -37,6 +37,5 @@
         "projectId": "152e31ae-3bbd-4e06-92bd-b8969a93362f"
       }
     },
-    "owner": "remindmeto"
   }
 }
