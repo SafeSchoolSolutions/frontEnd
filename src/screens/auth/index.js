@@ -6,6 +6,7 @@ import {
   Dimensions,
   TextInput,
   TouchableOpacity,
+  padding,
   KeyboardAvoidingView,
 } from "react-native";
 import styles from "./styles";
@@ -266,7 +267,10 @@ export default function AuthScreen() {
           </Text>
         </Animated.View>
       </Animated.View>
-      <KeyboardAvoidingView style={styles.bottomContainer}>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : null}
+        style={styles.bottomContainer}
+      >
         <Animated.View style={buttonsAnimatedStyle}>
           <TouchableOpacity style={styles.button} onPress={loginHandler}>
             <Text style={styles.buttonText}>LOG IN</Text>
