@@ -78,25 +78,6 @@ export const login = (email, password) => (dispatch) =>
       });
   });
 
-// export const createUserData =
-//   (medical_data, comfortable_responses) => (dispatch) =>
-//     new Promise((resolve, reject) => {
-//       firebase
-//         .firestore()
-//         .collection("users")
-//         .doc(firebase.auth().currentUser.uid)
-//         .update({
-//           medical_data: medical_data,
-//           comfortable_responses: comfortable_responses,
-//         })
-//         .then(() => {
-//           resolve();
-//         })
-//         .catch((error) => {
-//           console.log("TANUJ FUCKED UP" + error);
-//           reject();
-//         });
-//     });
 
 export const setFormCompleted = () => {
   firebase
@@ -202,38 +183,6 @@ export const goToSettings = () => {
     });
 };
 
-// export const setFirstPageData = (data) => (dispatch) =>
-//   new Promise((resolve, reject) => {
-//     firebase
-//       .firestore()
-//       .collection("users")
-//       .doc(firebase.auth().currentUser.uid)
-//       .update({
-//         basicData: data,
-//       });
-//   });
-
-// export const setSecondPageData = (data) => (dispatch) =>
-//   new Promise((resolve, reject) => {
-//     firebase
-//       .firestore()
-//       .collection("users")
-//       .doc(firebase.auth().currentUser.uid)
-//       .update({
-//         ecgData: data,
-//       });
-//   });
-
-// export const setThirdPageData = (data) => (dispatch) =>
-//   new Promise((resolve, reject) => {
-//     firebase
-//       .firestore()
-//       .collection("users")
-//       .doc(firebase.auth().currentUser.uid)
-//       .update({
-//         comfortableResponses: data,
-//       });
-//   });
 
 export const getEmergencyData = async () => {
   return await firebase
@@ -248,78 +197,6 @@ export const getEmergencyData = async () => {
     });
 };
 
-// export const reportEmergency = async () => {
-//   console.log("Reporting an emergency");
-
-//   let location = await Location.getCurrentPositionAsync({});
-
-//   let data = await getEmergencyData();
-
-//   data.age = data.age;
-//   data.sex = data.sex;
-//   data.emergencyType = data.emergencyType;
-
-//   for (const [key, value] of Object.entries(data)) {
-//     if (!value) {
-//       data[key] = "unknown";
-//     }
-//   }
-
-//   data.latitude = location.coords.latitude;
-//   data.longitude = location.coords.longitude;
-//   data.requiresCalling = true;
-//   data.responses = [];
-
-//   let temp_data = translateData(data);
-//   console.log("TEMP DATA" + JSON.stringify(temp_data));
-//   console.log("COCK" + JSON.stringify(data));
-
-//   //const temp_data = null
-//   if (temp_data == null) {
-//     firebase
-//       .firestore()
-//       .collection("emergencies")
-//       .doc(firebase.auth().currentUser.uid)
-//       .set(data);
-
-//     setTimeout(() => {
-//       console.log("Timed out");
-//       setEmergencyFormCompleted();
-//     }, 5000);
-//     return true;
-//   }
-
-//   console.log(data.chol);
-//   if (data.chol > 250) {
-//     data.emergencyType = "CPR/Heart Attach";
-//   } else {
-//     data.emergencyType = "Unknown";
-//   }
-
-//   firebase
-//     .firestore()
-//     .collection("emergencies")
-//     .doc(firebase.auth().currentUser.uid)
-//     .set(data);
-
-//   console.log("Set the data, setting form to complete");
-//   setTimeout(() => {
-//     console.log("Timed out");
-//     setEmergencyFormCompleted();
-//   }, 5000);
-
-//   return true;
-// };
-
-// export const setEmergencyFormCompleted = () => {
-//   firebase
-//     .firestore()
-//     .collection("emergencies")
-//     .doc(firebase.auth().currentUser.uid)
-//     .update({
-//       emergencySurveyTaken: true,
-//     });
-// };
 
 export const startEmergency = async () => {
   console.log("Creating emergency document");
