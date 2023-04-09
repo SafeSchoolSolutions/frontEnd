@@ -323,6 +323,18 @@ export const getEmergencyData = async () => {
 
 export const startEmergency = async () => {
   console.log("Creating emergency document");
+  if (Platform.OS !== "web") {
+    const { status } = await Location.requestForegroundPermissionsAsync();
+    
+    if (status !== "granted") {
+      Alert.alert(
+        "Insufficient permissions!",
+        "Sorry, we need location permissions to make this work!",
+        [{ text: "Okay" }]
+      );
+      return;
+    }
+  }
   let location = await Location.getCurrentPositionAsync({});
   const code = (
     await firebase
@@ -331,6 +343,7 @@ export const startEmergency = async () => {
       .doc(firebase.auth().currentUser.uid)
       .get()
   ).data().code;
+
   const emergencyDoc = await firebase
     .firestore()
     .collection("emergencies")
@@ -342,7 +355,6 @@ export const startEmergency = async () => {
         code: code,
         latitude: location.coords.latitude,
         longitude: location.coords.longitude,
-        responses: [],
       })
       .catch((e) => console.log("Error when creating emergency doc", e));
   } else
@@ -476,77 +488,3 @@ export const createStudent = async (studentName, studentNumber) => {
     });
 };
 
-// export const createStudent = async (student_Name, student_Phonenumber) => {
-//   console.log(student_Name, student_Phonenumber);
-
-//   let data = await firebase
-//     .firestore()
-//     .collection("users")
-//     .doc(firebase.auth().currentUser.uid)
-//     .get()
-//     .then((snapshot) => {
-//       if (snapshot.data().students) {
-//         console.log("Elsewwww");
-//         console.log(JSON.stringify(snapshot.data().students) + "ZZZZZZZZZZZZZ");
-//         return snapshot.data().students;
-//       } else {
-//         console.log("Else");
-//         firebase
-//           .firestore()
-//           .collection("users")
-//           .doc(firebase.auth().currentUser.uid)
-//           .update({
-//             students: {
-//               studentName: student_Name,
-//               studentPhoneNumber: student_Phonenumber,
-//             },
-//           });
-//         dataa.push([{
-//           studentName: student_Name,
-//           studentPhoneNumber: student_Phonenumber,
-//         }]);
-//       }
-//     });
-//   console.log(JSON.stringify(dataa) + "QQQQQQQQQQQ");
-//   dataa.push({
-//     studentName: student_Name,
-//     studentPhoneNumber: student_Phonenumber,
-//   });
-//   console.log(JSON.stringify(dataa) + "QWWWWWWWWWW");
-//   firebase
-//     .firestore()
-//     .collection("users")
-//     .doc(firebase.auth().currentUser.uid)
-//     .update({
-//       students: dataa,
-//     })
-//     .then(() => {
-//       console.log(firebase.auth().currentUser.uid);
-//       resolve();
-//     })
-//     .catch((error) => {
-//       console.log("Error when creating student" + error);
-//       reject();
-//     });
-// };
-/*
- firebase
-      .firestore()
-      .collection("users")
-      .doc(firebase.auth().currentUser.uid)
-      .update({
-        students: [
-          {
-            studentName: student_Name,
-            studentPhoneNumber: student_Phonenumber,
-          },
-        ],
-      })
-      .then(() => {
-        console.log(firebase.auth().currentUser.uid);
-        resolve();
-      })
-      .catch((error) => {
-        console.log("Error when creating student" + error);
-        reject();
-      }); */

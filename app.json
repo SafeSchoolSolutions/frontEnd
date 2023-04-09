@@ -37,5 +37,8 @@
         "projectId": "152e31ae-3bbd-4e06-92bd-b8969a93362f"
       }
     },
+    "permissions": [
+      "LOCATION"
+    ]
   }
 }

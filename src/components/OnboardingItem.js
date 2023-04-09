@@ -279,7 +279,7 @@ export default OnboardingItem = ({ item, scrollTo }) => {
       .doc(firebase.auth().currentUser.uid)
       .update({
         admin: true,
-        code: number,
+        code: String(number),
       })
       .catch((e) => console.log(e));
     setCode(number);
