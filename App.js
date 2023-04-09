@@ -13,13 +13,14 @@ import "firebase/compat/firestore";
 import * as Notifications from "expo-notifications";
 export default function App() {
   const firebaseConfig = {
-    apiKey: "AIzaSyBTg32Iv-oRy_jD3vL7QnCIWS5Zl0IlO9k",
-    authDomain: "zeroresponder-52ca2.firebaseapp.com",
-    databaseURL: "https://zeroresponder-52ca2-default-rtdb.firebaseio.com",
-    projectId: "zeroresponder-52ca2",
-    storageBucket: "zeroresponder-52ca2.appspot.com",
-    messagingSenderId: "733152214492",
-    appId: "1:733152214492:web:c9628fcbf8d605c3caa319",
+    apiKey: "AIzaSyAu5IvjFeaDoWyQftk4mkxgFNznHJUujrQ",
+    authDomain: "protected-50243.firebaseapp.com",
+    databaseURL: "https://protected-50243-default-rtdb.firebaseio.com",
+    projectId: "protected-50243",
+    storageBucket: "protected-50243.appspot.com",
+    messagingSenderId: "239271562379",
+    appId: "1:239271562379:web:08fe96a8377ee702d4188e",
+    measurementId: "G-R9D15TV9MV"
   };
   const store = createStore(rootReducer, applyMiddleware(thunk));
   if (firebase.apps.length === 0) {

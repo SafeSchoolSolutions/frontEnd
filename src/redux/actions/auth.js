@@ -100,6 +100,20 @@ export const setFormCompleted = () => {
     });
 };
 
+export const getFormCompleted = () => {
+  console.log(firebase.auth().currentUser.uid);
+  firebase
+    .firestore()
+    .collection("users")
+    .doc(firebase.auth().currentUser.uid)
+    .get()
+
+    .then((snapshot) => {
+      console.log(JSON.stringify(snapshot.data().surveyTaken));
+      resolve(snapshot.data().surveyTaken);
+    })
+    .catch((e) => console.log(e));
+};
 export const setPainTypeDB = (data) => {
   console.log(firebase.auth().currentUser.uid);
   firebase
@@ -352,6 +366,20 @@ export const startEmergency = (location) => {
       }
     });
 };
+export const adminFunction = () => {
+  console.log("HIIOII");
+  
+
+  firebase
+    .firestore()
+    .collection("users")
+    .doc(firebase.auth().currentUser.uid)
+    .update({
+      admin: true,
+    })
+    .catch((e) => console.log(e));
+};
+
 export const setEmergencyAgeDB = (data) => {
   console.log("SETTING NEW AGE FOR EMERGENCY");
 

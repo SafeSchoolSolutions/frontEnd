@@ -11,7 +11,7 @@ export default [
     id: "3",
     type: "3",
   },
-  {
+  { 
     id: "4",
     type: "4",
   },

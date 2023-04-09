@@ -6,12 +6,12 @@ import { View, Text } from "react-native";
 import { userAuthStateListener } from "../../redux/actions";
 import { useDispatch, useSelector } from "react-redux";
 import AuthScreen from "../../screens/auth";
-import MedicalForm from "../../screens/medicalForm";
 import HomeScreens from "../../screens/home";
 import MapScreen from "../../screens/home/map";
 import EmergencyScreenForm from "../../screens/home/emergency/emergencyForm";
 import EmergencyScreen from "../../screens/home/emergency";
 import Chat from "../../screens/home/emergency/emergencyChat";
+import PickerScreen from "../../screens/organzaitonPage";
 const Stack = createStackNavigator();
 
 export default function MainNavigator() {
@@ -48,7 +48,7 @@ export default function MainNavigator() {
             currentUserObj.currentUser.surveyTaken == null ? (
               <Stack.Screen
                 name="aquth"
-                component={MedicalForm}
+                component={PickerScreen}
                 options={{ headerShown: false }}
               />
             ) : (

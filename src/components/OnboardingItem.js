@@ -9,6 +9,7 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { MultipleSelectList } from "react-native-dropdown-select-list";
+import { Feather } from "@expo/vector-icons";
 import { SelectList } from "react-native-dropdown-select-list";
 import { useEffect } from "react";
 import Device from "expo-device";
@@ -34,7 +35,12 @@ import {
   setVictimState,
   startEmergency,
 } from "../redux/actions/auth";
-export default OnboardingItem = ({ item }) => {
+import * as Clipboard from "expo-clipboard";
+import firebase from "firebase/compat/app";
+import "firebase/compat/auth";
+import "firebase/compat/firestore";
+import { adminFunction } from "../redux/actions/auth";
+export default OnboardingItem = ({ item, scrollTo }) => {
   const [age, setAge] = useState(null);
   const [sex, setSex] = useState(null);
   const [chol, setChol] = useState(null);
@@ -52,7 +58,7 @@ export default OnboardingItem = ({ item }) => {
   const [selected, setSelected] = useState([]);
   var wage = "";
 
-  const [emergencyAge, setEmergencyAge] = useState(null);
+  const [code, setCode] = useState(null);
   const [emergencySex, setEmergencySex] = useState(null);
   const [emergencyChol, setEmergencyChol] = useState(null);
   const [emergencyEcg, setEmergencyEcg] = useState(null);
@@ -75,6 +81,7 @@ export default OnboardingItem = ({ item }) => {
   const sexArray = [
     { key: "1", value: "Male" },
     { key: "2", value: "Female" },
+    { key: "3", value: "Everyday" },
   ];
   const ecgResultArray = [
     { key: "1", value: "Normal" },
@@ -87,26 +94,25 @@ export default OnboardingItem = ({ item }) => {
     { key: "3", value: "Non Cardiac Chest Pain" },
     { key: "4", value: "No Chest Pain" },
   ];
-  useEffect(() => {
-    (async () => {
-      /* @end */
-      let { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== "granted") {
-        setErrorMsg("Permission to access location was denied");
-        return;
-      }
+  const fuckYOU = () => {
+    const upperBound = 999;
+    const lowerBound = 100;
+    const number =
+      lowerBound + Math.floor(Math.random() * (upperBound - lowerBound + 1));
 
-      let location = await Location.getCurrentPositionAsync({});
-      setLocation(location);
-      console.log(
-        JSON.stringify(location.coords.latitude) +
-          "QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ" +
-          JSON.stringify(location.coords.longitude) +
-          "QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ"
-      );
-    })();
-  }, []);
+    console.log(number);
 
+    firebase
+      .firestore()
+      .collection("users")
+      .doc(firebase.auth().currentUser.uid)
+      .update({
+        admin: true,
+        code: number,
+      })
+      .catch((e) => console.log(e));
+    setCode(number);
+  };
   let text = "Waiting..";
   if (errorMsg) {
     text = errorMsg;
@@ -114,100 +120,17 @@ export default OnboardingItem = ({ item }) => {
     text = JSON.stringify(location);
   }
 
-  let medicalData = {};
-  useEffect(() => {
-    if (age) {
-      setAgeDB(age);
-    }
-  }, [age]);
-  useEffect(() => {
-    if (sex) {
-      setSexDB(sex);
-    }
-  }, [sex]);
-  useEffect(() => {
-    if (ecg) {
-      setEcgDB(ecg);
-    }
-  }, [ecg]);
-  useEffect(() => {
-    if (chol) {
-      setCholDB(chol);
-    }
-  }, [chol]);
-  useEffect(() => {
-    if (fastingBloodSugar) {
-      setFBSDB(fastingBloodSugar);
-    }
-  }, [fastingBloodSugar]);
-  useEffect(() => {
-    if (ecgResult) {
-      setEcgResultDB(ecgResult);
-    }
-  }, [ecgResult]);
-  useEffect(() => {
-    if (heartRate) {
-      setHeartRateDB(heartRate);
-    }
-  }, [heartRate]);
-  useEffect(() => {
-    if (painType) {
-      setPainTypeDB(painType);
-    }
-  }, [painType]);
-  useEffect(() => {
-    if (selected) {
-      setResponseWilling(selected);
-    }
-  }, [selected]);
-  useEffect(() => {
-    console.log(emergencyAge);
-    if (emergencyAge) {
-      setEmergencyAgeDB(emergencyAge);
-    }
-  }, [emergencyAge]);
-
-  useEffect(() => {
-    if (emergencyChol) {
-      setEmergencyCholDB(emergencyChol);
-    }
-  }, [emergencyChol]);
-  useEffect(() => {
-    if (emergencyFastingBloodSugar) {
-      setEmergencyFBSDB(emergencyFastingBloodSugar);
-    }
-  }, [emergencyFastingBloodSugar]);
-  useEffect(() => {
-    if (emergencyEcg) {
-      setEmergencyECGDB(emergencyEcg);
-    }
-  }, [emergencyEcg]);
-  useEffect(() => {
-    if (emergencySex) {
-      setEmergencySexDB(emergencySex);
-    }
-  }, [emergencySex]);
-  useEffect(() => {
-    if (emregencyState) {
-      setVictimState(emregencyState);
-    }
-  }, [emregencyState]);
-  useEffect(() => {
-    if (emergencySelected) {
-      setEmergencyType(emergencySelected);
-    }
-  }, [emergencySelected]);
-
   if (item.type == 1) {
+    console.log("yo");
     return (
       <View style={[styles.container, { width }]}>
         <View style={{ flex: 0.3 }}>
-          <Text style={styles.title}>Health Survey</Text>
+          <Text style={styles.title}>School/Classroom Setup</Text>
           <Text style={styles.description}>
-            Please take the time to enter data truthfully.
+            This information is given to police and other first responders.
           </Text>
           <Text style={styles.description}>
-            Feel free to leave something empty if you don't know the answer.
+            if you are an adminstrator, answer for the entire school.
           </Text>
         </View>
       </View>
@@ -221,61 +144,30 @@ export default OnboardingItem = ({ item }) => {
             setAge(text);
           }}
           style={styles.textInput}
-          placeholder="Age"
+          placeholder="Student Count"
           placeholderTextColor={"#98c1d9"}
         />
 
         <TextInput
           onChangeText={(text) => setChol(text)}
           style={styles.textInput}
-          placeholder="Cholesterol"
+          placeholder="Location"
           placeholderTextColor={"#98c1d9"}
         />
         <TextInput
-          onChangeText={(text) => setFastingBloodSugar(text)}
+          onChangeText={(text) => setChol(text)}
           style={styles.textInput}
-          placeholder="Fasting Blood Sugar"
+          placeholder="Phone Number"
           placeholderTextColor={"#98c1d9"}
         />
-        <Text style={styles.YesNoText}>Do you have chest pain?</Text>
-        <View style={{ flexDirection: "row" }}>
-          <TouchableOpacity
-            style={styles.YesNoButton}
-            onPress={() => {
-              setEcg(true);
-              console.log(ecg);
-            }}
-          >
-            <Text style={styles.buttonText}>Yes</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.YesNoButton}
-            onPress={() => {
-              setEcg(false);
-              console.log(ecg);
-            }}
-          >
-            <Text style={styles.buttonText}>No</Text>
-          </TouchableOpacity>
-        </View>
-        <Text style={styles.YesNoText}>Sex</Text>
-        <SelectList
-          setSelected={(val) => setSex(val)}
-          data={sexArray}
-          save="value"
-          search={false}
-          backgroundColor="#98c1d9"
-          maxHeight={90}
-          boxStyles={{
-            backgroundColor: "#98c1d9",
-            borderColor: "#e0fbfc",
-          }}
-          inputStyles={{ color: "#e0fbfc" }}
-          dropdownStyles={{
-            backgroundColor: "#98c1d9",
-            borderColor: "#e0fbfc",
-          }}
-          dropdownTextStyles={{ color: "#e0fbfc" }}
+
+        <Text style={styles.YesNoText}>Additional Information:</Text>
+
+        <TextInput
+          onChangeText={(text) => setFastingBloodSugar(text)}
+          style={styles.textInputs}
+          placeholder="EX: Between library and hallway. Tight"
+          placeholderTextColor={"#98c1d9"}
         />
       </View>
     );
@@ -283,61 +175,27 @@ export default OnboardingItem = ({ item }) => {
   if (item.type == 3) {
     return (
       <View style={[styles.container, { width }]}>
-        <Text
-          style={{
-            fontWeight: "300",
-            color: "#98c1d9",
-            textAlign: "center",
-            paddingHorizontal: 64,
-            marginTop: 30,
-          }}
-        >
-          Skip this page if you haven't taken an ECG recently
-        </Text>
-        <Text style={styles.YesNoText}>Ecg Result</Text>
-        <SelectList
-          setSelected={(val) => setEcgResult(val)}
-          data={ecgResultArray}
-          save="value"
-          search={false}
-          boxStyles={{
-            backgroundColor: "#98c1d9",
-            borderColor: "#e0fbfc",
-          }}
-          inputStyles={{ color: "#e0fbfc" }}
-          dropdownStyles={{
-            backgroundColor: "#98c1d9",
-            borderColor: "#e0fbfc",
-          }}
-          dropdownTextStyles={{ color: "#e0fbfc" }}
-        />
+        <Text style={styles.YesNoText}>Enter Organization Code:</Text>
+
         <TextInput
           onChangeText={(text) => setHeartRate(text)}
           style={styles.textInput}
-          placeholder="Max Heartrate"
+          placeholder="      "
           placeholderTextColor={"#98c1d9"}
         />
-        <Text style={styles.YesNoText}>Pain Type</Text>
-        <SelectList
-          setSelected={(val) => setPainType(val)}
-          data={painTypeArray}
-          save="value"
-          search={false}
-          boxStyles={{
-            backgroundColor: "#98c1d9",
-            borderColor: "#e0fbfc",
+        <TouchableOpacity onPress={() => scrollTo}>
+          <Text style={{ color: "#8cc1e8" }}>
+            Dont have one? Scroll to the next page
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.textInputss}
+          onPress={() => {
+            fuckYOU();
           }}
-          inputStyles={{ color: "#e0fbfc" }}
-          dropdownStyles={{
-            backgroundColor: "#98c1d9",
-            borderColor: "#e0fbfc",
-          }}
-          dropdownTextStyles={{ color: "#e0fbfc" }}
-        />
-
-        <View style={{ flex: 0.3 }}>
-          <Text style={styles.title}></Text>
-        </View>
+        >
+          <Text style={styles.descriptions}>Submit:</Text>
+        </TouchableOpacity>
       </View>
     );
   }
@@ -346,27 +204,33 @@ export default OnboardingItem = ({ item }) => {
       <View style={[styles.container, { width }]}>
         <View style={{ flex: 0.2 }}></View>
         <View style={{ flex: 0.8, marginTop: 40 }}>
-          <Text style={styles.title}>What accidents can you respond to?</Text>
-          <Text style={styles.description}>If none just skip</Text>
+          <TouchableOpacity
+            style={styles.textInputss}
+            onPress={() => {
+              fuckYOU();
+            }}
+          >
+            <Text style={styles.descriptions}>Generate Code:</Text>
+          </TouchableOpacity>
+          <View style={{ flexDirection: "row", padding: 40 }}>
+            <TouchableOpacity
+              onPress={() => {
+                Clipboard.setStringAsync(code);
+              }}
+            >
+              <Feather
+                name="clipboard"
+                size={40}
+                color="rgb(237, 229, 204)"
+                style={{
+                  margin: 20,
+                }}
+              />
+            </TouchableOpacity>
+            <Text style={styles.descriptionss}>{code}</Text>
+          </View>
+
           <View style={{ flex: 0.5 }}></View>
-          <MultipleSelectList
-            setSelected={(val) => setSelected(val)}
-            data={data}
-            save="value"
-            label="Responses"
-            maxHeight={200}
-            search={false}
-            boxStyles={{
-              backgroundColor: "#98c1d9",
-              borderColor: "#e0fbfc",
-            }}
-            inputStyles={{ color: "#e0fbfc", borderColor: "#e0fbfc" }}
-            dropdownStyles={{
-              backgroundColor: "#98c1d9",
-              borderColor: "#e0fbfc",
-            }}
-            dropdownTextStyles={{ color: "#e0fbfc" }}
-          />
         </View>
         <Image
           source={item.image}
@@ -533,6 +397,19 @@ const styles = StyleSheet.create({
     textAlign: "center",
     paddingHorizontal: 64,
   },
+  descriptions: {
+    fontWeight: "bold",
+    fontSize: 20,
+    color: "#98c1d9",
+    textAlign: "center",
+  },
+  descriptionss: {
+    marginTop: 20,
+    fontWeight: "bold",
+    fontSize: 30,
+    color: "#98c1d9",
+    textAlign: "center",
+  },
   containers: {
     flex: 1,
     alignItems: "center",
@@ -552,6 +429,34 @@ const styles = StyleSheet.create({
     marginTop: 20,
     paddingHorizontal: 40,
     fontSize: 20,
+    placeholderTextColor: "#98c1d9",
+    color: "#98c1d9",
+  },
+  textInputs: {
+    borderColor: "#e0fbfc",
+    borderRadius: 30,
+    borderWidth: 2,
+    borderStyle: "solid",
+    paddingBottom: 200,
+    paddingVertical: 20,
+    paddingHorizontal: 20,
+    marginTop: 10,
+    paddingHorizontal: 40,
+    fontSize: 15,
+    placeholderTextColor: "#98c1d9",
+    color: "#98c1d9",
+  },
+  textInputss: {
+    borderColor: "#e0fbfc",
+    borderRadius: 30,
+    borderWidth: 2,
+    borderStyle: "solid",
+
+    paddingVertical: 20,
+    paddingHorizontal: 20,
+    marginTop: 10,
+    paddingHorizontal: 40,
+    fontSize: 30,
     placeholderTextColor: "#98c1d9",
     color: "#98c1d9",
   },
