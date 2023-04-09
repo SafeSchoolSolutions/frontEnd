@@ -58,6 +58,11 @@ import Animated, {
   SlideOutDown,
   Transition,
   SlideOutRight,
+  useAnimatedStyle,
+  withRepeat,
+  withSequence,
+  withTiming,
+  withDelay,
   SlideOutLeft,
 } from "react-native-reanimated";
 import firebase from "firebase/compat/app";
@@ -133,7 +138,7 @@ export default OnboardingItem = ({ item, scrollTo }) => {
     fetchData();
   }, [item.id]);
 
-  const codeCheck = async ( ) => {
+  const codeCheck = async () => {
     console.log("Checking code : " + code);
     const snapShot = await firebase
       .firestore()
@@ -161,6 +166,29 @@ export default OnboardingItem = ({ item, scrollTo }) => {
       ]);
     }
   };
+  const animatedStyles = useAnimatedStyle(() => ({
+    transform: [
+      {
+        translateY: withRepeat(
+          withSequence(
+            withTiming(-12),
+            withDelay(800, withTiming(1)),
+            withTiming(-12)
+          ),
+          -1
+        ),
+      },
+    ],
+  }));
+  const opacityStyle = useAnimatedStyle(() => ({
+    opacity: withRepeat(
+      withSequence(
+        withDelay(1500, withTiming(0)),
+        withDelay(300, withTiming(1))
+      ),
+      -1
+    ),
+  }));
   // age sex race height weight
   useEffect(() => {
     const unsubscribe = firebase
@@ -337,9 +365,20 @@ export default OnboardingItem = ({ item, scrollTo }) => {
           placeholderTextColor={"#98c1d9"}
         />
         <TouchableOpacity onPress={() => scrollTo}>
-          <Text style={{ color: "#8cc1e8", paddingBottom: 20 }}>
+          <Animated.Text
+            style={[
+              {
+                paddingTop: 16,
+                color: "#8cc1e8",
+                fontWeight: "600",
+
+                letterSpacing: 0.5,
+              },
+              animatedStyles,
+            ]}
+          >
             Dont have one? Scroll →
-          </Text>
+          </Animated.Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.textInputss}
@@ -364,9 +403,27 @@ export default OnboardingItem = ({ item, scrollTo }) => {
               fuckYOU();
             }}
           >
-            <Text style={styles.descriptions}>Generate Code:</Text>
+            <Animated.Text
+              style={[
+                {
+                  fontWeight: "bold",
+                  fontSize: 30,
+                  color: "#98c1d9",
+                  textAlign: "center",
+                },
+                opacityStyle,
+              ]}
+            >
+              Generate Code:
+            </Animated.Text>
           </TouchableOpacity>
-          <View style={{ flexDirection: "row", padding: 40 }}>
+          <View
+            style={{
+              flexDirection: "row",
+              padding: 40,
+              justifyContent: "space-evenly",
+            }}
+          >
             <TouchableOpacity
               onPress={() => {
                 Clipboard.setStringAsync(code);
@@ -381,6 +438,7 @@ export default OnboardingItem = ({ item, scrollTo }) => {
                 }}
               />
             </TouchableOpacity>
+
             <Text style={styles.descriptionss}>{code}</Text>
           </View>
 
