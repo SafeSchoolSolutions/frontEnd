@@ -153,7 +153,7 @@ export default OnboardingItem = ({ item, scrollTo }) => {
         .collection("users")
         .doc(firebase.auth().currentUser.uid)
         .update({
-          code: code,
+          code: String(code),
         });
       setFormCompleted();
     } else {
