@@ -8,6 +8,8 @@ import {
   TouchableOpacity,
   padding,
   KeyboardAvoidingView,
+  TouchableWithoutFeedback,
+  Keyboard,
 } from "react-native";
 import styles from "./styles";
 import Svg, { Image, Ellipse, ClipPath } from "react-native-svg";
@@ -270,55 +272,64 @@ export default function AuthScreen() {
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : null}
         style={styles.bottomContainer}
+        keyboardVerticalOffset={Platform.OS === "ios" ? 200 : 0}
       >
-        <Animated.View style={buttonsAnimatedStyle}>
-          <TouchableOpacity style={styles.button} onPress={loginHandler}>
-            <Text style={styles.buttonText}>LOG IN</Text>
-          </TouchableOpacity>
-        </Animated.View>
-        <Animated.View style={buttonsAnimatedStyle}>
-          <TouchableOpacity style={styles.button} onPress={registerHandler}>
-            <Text style={styles.buttonText}>REGISTER</Text>
-          </TouchableOpacity>
-        </Animated.View>
-        <Animated.View style={[styles.formInputContainer, formAnimatedStyle]}>
-          <TextInput
-            placeholder="Email"
-            placeholderTextColor="#e0fbfc"
-            style={styles.textInput}
-            onChangeText={(text) => setEmailAddress(text)}
-          />
-          {isRegistering && (
-            <TextInput
-              placeholder="Full Name"
-              placeholderTextColor="#e0fbfc"
-              style={styles.textInput}
-              onChangeText={(text) => setName(text)}
-            />
-          )}
-          <TextInput
-            secureTextEntry={true}
-            placeholder="Password"
-            placeholderTextColor="#e0fbfc"
-            style={styles.textInput}
-            onChangeText={(text) => setPassword(text)}
-          />
-          <Animated.View style={[styles.formButton, formButtonAnimatedStyle]}>
-            <TouchableOpacity
-              onPress={() => {
-                formButtonScale.value = withSequence(
-                  withSpring(1.5),
-                  withSpring(1)
-                );
-                handleButtonPress();
-              }}
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+          <View>
+            <Animated.View style={buttonsAnimatedStyle}>
+              <TouchableOpacity style={styles.button} onPress={loginHandler}>
+                <Text style={styles.buttonText}>LOG IN</Text>
+              </TouchableOpacity>
+            </Animated.View>
+            <Animated.View style={buttonsAnimatedStyle}>
+              <TouchableOpacity style={styles.button} onPress={registerHandler}>
+                <Text style={styles.buttonText}>REGISTER</Text>
+              </TouchableOpacity>
+            </Animated.View>
+            <Animated.View
+              style={[styles.formInputContainer, formAnimatedStyle]}
             >
-              <Text style={styles.buttonText}>
-                {isRegistering ? "REGISTER" : "LOG IN"}
-              </Text>
-            </TouchableOpacity>
-          </Animated.View>
-        </Animated.View>
+              <TextInput
+                placeholder="Email"
+                placeholderTextColor="#e0fbfc"
+                style={styles.textInput}
+                onChangeText={(text) => setEmailAddress(text)}
+              />
+              {isRegistering && (
+                <TextInput
+                  placeholder="Full Name"
+                  placeholderTextColor="#e0fbfc"
+                  style={styles.textInput}
+                  onChangeText={(text) => setName(text)}
+                />
+              )}
+              <TextInput
+                secureTextEntry={true}
+                placeholder="Password"
+                placeholderTextColor="#e0fbfc"
+                style={styles.textInput}
+                onChangeText={(text) => setPassword(text)}
+              />
+              <Animated.View
+                style={[styles.formButton, formButtonAnimatedStyle]}
+              >
+                <TouchableOpacity
+                  onPress={() => {
+                    formButtonScale.value = withSequence(
+                      withSpring(1.5),
+                      withSpring(1)
+                    );
+                    handleButtonPress();
+                  }}
+                >
+                  <Text style={styles.buttonText}>
+                    {isRegistering ? "REGISTER" : "LOG IN"}
+                  </Text>
+                </TouchableOpacity>
+              </Animated.View>
+            </Animated.View>
+          </View>
+        </TouchableWithoutFeedback>
       </KeyboardAvoidingView>
     </Animated.View>
   );
