@@ -14,17 +14,18 @@ import NextButton from "../../../../components/NextButton";
 import OnboardingItem from "../../../../components/OnboardingItem";
 import * as Icon from "react-native-feather";
 import Chat from "../emergencyChat";
+import styles from "./styles"
+
 export default function EmergencyScreenForm() {
   const navigation = useNavigation();
-  const doTanujTHing = async () => {
-    navigation.navigate("chatScreen");
-  };
+
   const slides = [
     {
       id: "5",
       type: "5",
     },
   ];
+  
   const [currentIndex, setCurrentIndex] = useState(0);
   const scrollX = useRef(new Animated.Value(0)).current;
   const slidesRef = useRef(null);
@@ -39,7 +40,7 @@ export default function EmergencyScreenForm() {
     if (currentIndex < slides.length - 1) {
       slidesRef.current.scrollToIndex({ index: currentIndex + 1 });
     } else {
-      doTanujTHing();
+      navigation.navigate("chatScreen");
     }
   };
 
@@ -75,11 +76,3 @@ export default function EmergencyScreenForm() {
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    backgroundColor: "#3d5a80",
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-});

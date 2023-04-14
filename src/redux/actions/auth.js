@@ -8,18 +8,19 @@ import "firebase/compat/firestore";
 import Device from "expo-device";
 import * as Location from "expo-location";
 
+
 export const userAuthStateListener = () => (dispatch) => {
   firebase.auth().onAuthStateChanged((user) => {
     console.log("WWW");
     if (user) {
-      dispatch(getCurrentUserData());
+      dispatch(getCurrentUserDataDispatch());
     } else {
       dispatch({ type: USER_STATE_CHANGE, currentUser: null, loaded: true });
     }
   });
 };
 
-export const getCurrentUserData = () => (dispatch) => {
+export const getCurrentUserDataDispatch = () => (dispatch) => {
   firebase
     .firestore()
     .collection("users")
@@ -35,20 +36,15 @@ export const getCurrentUserData = () => (dispatch) => {
     });
 };
 
-export const checkCode = (code) => (dispatch) => {
-  console.log("Checking if org code is valid");
-  firebase
-    .firestore()
-    .collection("users")
-    .where("email", "==", email)
-    .get()
-    .then((querySnap) => {
-      if (!querySnap.empty) {
-        let result = querySnap.map((doc) => {
-          return doc.data();
-        });
-      }
-    });
+export const getCurrentUserDoc = () => {
+  return firebase
+  .firestore()
+  .collection("users")
+  .doc(firebase.auth().currentUser.uid)
+};
+
+export const getCurrentUserData = async () => {
+  return (await getCurrentUserDoc().get()).data()
 };
 
 export const register = (email, password) => (dispatch) =>
@@ -78,128 +74,140 @@ export const login = (email, password) => (dispatch) =>
       });
   });
 
-
 export const setFormCompleted = () => {
-  firebase
-    .firestore()
-    .collection("users")
-    .doc(firebase.auth().currentUser.uid)
+  getCurrentUserDoc()
     .update({
       surveyTaken: true,
     });
 };
 
 export const getFormCompleted = () => {
-  firebase
-    .firestore()
-    .collection("users")
-    .doc(firebase.auth().currentUser.uid)
+  return getCurrentUserDoc()
     .get()
-
-    .then((snapshot) => {
-      console.log(JSON.stringify(snapshot.data().surveyTaken));
-      resolve(snapshot.data().surveyTaken);
+    .then((snap) => {
+      return snap.data().surveyTaken;
     })
-    .catch((e) => console.log(e));
 };
 
 export const setLocationDB = (data) => {
-  firebase
-    .firestore()
-    .collection("users")
-    .doc(firebase.auth().currentUser.uid)
+  getCurrentUserDoc()
     .update({
       location: data,
     });
 };
 
 export const setPhoneNumberDB = (data) => {
-  firebase
-    .firestore()
-    .collection("users")
-    .doc(firebase.auth().currentUser.uid)
+  getCurrentUserDoc()
     .update({
       phoneNumber: data,
     });
 };
 
 export const setStudentCountDB = (data) => {
-  firebase
-    .firestore()
-    .collection("users")
-    .doc(firebase.auth().currentUser.uid)
+  getCurrentUserDoc()
     .update({
       student_Count: data,
     });
 };
 
-export const setAdressDB = (data) => {
-  firebase
-    .firestore()
-    .collection("users")
-    .doc(firebase.auth().currentUser.uid)
+export const setAddressDB = (data) => {
+  getCurrentUserDoc()
     .update({
       address: data,
     });
 };
 
 export const setAdditionalInfoDB = (data) => {
-  firebase
-    .firestore()
-    .collection("users")
-    .doc(firebase.auth().currentUser.uid)
+  getCurrentUserDoc()
     .update({
       extraInfo: data,
     });
 };
 
 export const setSexDB = (data) => {
-  firebase
-    .firestore()
-    .collection("users")
-    .doc(firebase.auth().currentUser.uid)
+  getCurrentUserDoc()
     .update({
       sex: data,
     });
 };
 
 export const setAgeDB = (data) => {
-  firebase
-    .firestore()
-    .collection("users")
-    .doc(firebase.auth().currentUser.uid)
+  getCurrentUserDoc()
     .update({
       age: data,
     });
 };
 
 export const goToSettings = () => {
-  firebase
-    .firestore()
-    .collection("users")
-    .doc(firebase.auth().currentUser.uid)
+  getCurrentUserDoc()
     .update({
       surveyTaken: false,
     });
 };
 
-
-export const getEmergencyData = async () => {
-  return await firebase
-    .firestore()
-    .collection("emergencies")
-    .doc(firebase.auth().currentUser.uid)
-    .get()
-    .then((snapshot) => {
-      console.log(snapshot.id);
-      console.log(snapshot.data());
-      return snapshot.data();
-    });
+export const adminFunction = () => {
+  getCurrentUserDoc()
+    .update({
+      admin: true,
+    })
 };
 
 
-export const startEmergency = async () => {
-  console.log("Creating emergency document");
+export const getEmergencyDoc = () => {
+  return firebase 
+  .firestore()
+  .collection("emergencies")
+  .doc(firebase.auth().currentUser.uid)
+};
+
+export const setEmergencyAgeDB = (data) => {
+  getEmergencyDoc()
+    .update({
+      age: data,
+    })
+};
+
+export const setEmergencyStudentsListDB = (data) => {
+  getEmergencyDoc()
+    .update({
+      injuredStudents: data,
+    })
+};
+
+export const setEmergencyRaceDB = (data) => {
+  getEmergencyDoc()
+    .update({
+      race: data,
+    })
+};
+
+export const setEmergencyHeightDB = (data) => {
+  getEmergencyDoc()
+    .update({
+      height: data,
+    })
+};
+
+export const setEmergencyWeightDB = (data) => {
+  getEmergencyDoc()
+    .update({
+      weight: data,
+    })
+};
+
+export const setEmergencySexDB = (data) => {
+  getEmergencyDoc()
+    .update({
+      sex: data,
+    })
+};
+
+export const getEmergencyData = async () => {
+  return (await getEmergencyDoc().get()).data()
+};
+
+
+export const getCurrentLocation = async () => {
   if (Platform.OS !== "web") {
     const { status } = await Location.requestForegroundPermissionsAsync();
     
@@ -212,135 +220,31 @@ export const startEmergency = async () => {
       return;
     }
   }
-  let location = await Location.getCurrentPositionAsync({});
+  return await Location.getCurrentPositionAsync({});
+};
 
 
-  const current_user_data = (
-    await firebase
-      .firestore()
-      .collection("users")
-      .doc(firebase.auth().currentUser.uid)
-      .get()
-  ).data()
+export const startEmergency = async () => {
+  console.log("Creating emergency document");
+  const current_user_data = await getCurrentUserData()
+  const location = await getCurrentLocation()
 
-  console.log("current user data", current_user_data)
   const emergencyDoc = await firebase
     .firestore()
     .collection("emergencies")
     .doc(firebase.auth().currentUser.uid)
-    .get();
-  if (emergencyDoc.exists) {
-    emergencyDoc.ref
-      .update({
-        location: current_user_data.location,
-        address: current_user_data.address,
-        code: current_user_data.code,
-        latitude: location.coords.latitude,
-        longitude: location.coords.longitude,
-      })
-      .catch((e) => console.log("Error when creating emergency doc", e));
-  } else
-    emergencyDoc.ref
-      .set({
-        injuredStudents: [],
-        location: current_user_data.location,
-        address: current_user_data.address,
-        code: current_user_data.code,
-        latitude: location.coords.latitude,
-        longitude: location.coords.longitude,
-        responses: [],
-      })
-      .catch((e) => console.log("Error when creating emergency doc", e));
+    .set({
+      injuredStudents: [],
+      location: current_user_data.location,
+      address: current_user_data.address,
+      code: current_user_data.code,
+      latitude: location.coords.latitude,
+      longitude: location.coords.longitude,
+      responses: [],
+    })
+    .catch((e) => console.log("Error when creating emergency doc", e));
 };
 
-export const adminFunction = () => {
-  console.log("Setting current user as an admin");
-  firebase
-    .firestore()
-    .collection("users")
-    .doc(firebase.auth().currentUser.uid)
-    .update({
-      admin: true,
-    })
-    .catch((e) => console.log("Error when setting admin", e));
-};
-
-export const setEmergencyAgeDB = (data) => {
-  console.log("Setting age of shooter");
-
-  firebase
-    .firestore()
-    .collection("emergencies")
-    .doc(firebase.auth().currentUser.uid)
-    .update({
-      age: data,
-    })
-    .catch((e) => console.log("Error when setting age", e));
-};
-
-export const setEmergencyStudentsListDB = (data) => {
-  console.log("setEmergencyStudentsListDB, data:", data);
-
-  firebase
-    .firestore()
-    .collection("emergencies")
-    .doc(firebase.auth().currentUser.uid)
-    .update({
-      injuredStudents: data,
-    })
-    .then(() => {
-      console.log("Update successful, data:", data);
-    })
-    .catch((e) => console.log("Error when setting age", e));
-};
-export const setEmergencyRaceDB = (data) => {
-  console.log("Setting race of shooter");
-
-  firebase
-    .firestore()
-    .collection("emergencies")
-    .doc(firebase.auth().currentUser.uid)
-    .update({
-      race: data,
-    })
-    .catch((e) => console.log("Error when setting race", e));
-};
-export const setEmergencyHeightDB = (data) => {
-  console.log("Setting height of shooter");
-
-  firebase
-    .firestore()
-    .collection("emergencies")
-    .doc(firebase.auth().currentUser.uid)
-    .update({
-      height: data,
-    })
-    .catch((e) => console.log("Error when setting height", e));
-};
-export const setEmergencyWeightDB = (data) => {
-  console.log("Setting weight of shooter");
-
-  firebase
-    .firestore()
-    .collection("emergencies")
-    .doc(firebase.auth().currentUser.uid)
-    .update({
-      weight: data,
-    })
-    .catch((e) => console.log("Error when setting weight", e));
-};
-
-export const setEmergencySexDB = (data) => {
-  console.log("Setting sex of shooter");
-  firebase
-    .firestore()
-    .collection("emergencies")
-    .doc(firebase.auth().currentUser.uid)
-    .update({
-      sex: data,
-    })
-    .catch((e) => console.log("Error when setting sex", e));
-};
 
 export const getEmergencies = () => {
   let markerArray = [];

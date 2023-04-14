@@ -245,6 +245,52 @@ const styles = StyleSheet.create({
   boggle: {
     padding: 10,
   },
+  container: {
+    backgroundColor: "#3d5a80",
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  emergencyText: {
+    fontSize: 22,
+    fontWeight: "500",
+    color: "#3d5a80",
+    textAlign: "center",
+    justifyContent: "center",
+  },
+  emergencyButton: {
+    alignSelf: "center",
+    height: 150,
+    width: 150,
+    borderRadius: 100,
+    borderColor: "#3d5a80",
+    borderWidth: 2,
+    backgroundColor: "#FF0000",
+    justifyContent: "center",
+  },
+  dot: {
+    width: 150,
+    height: 150,
+    borderRadius: 150,
+    backgroundColor: "#ee6c4d",
+  },
+  YesNoText: {
+    marginTop: 15,
+    paddingHorizontal: 40,
+    fontSize: 20,
+    color: "#98c1d9",
+    margin: 10,
+  },
+  YesNoButton: {
+    borderWidth: 1,
+    borderColor: "#e0fbfc",
+    borderRadius: 30,
+    backgroundColor: "#98c1d9",
+    margin: 10,
+    justifyContent: "center",
+    alignContent: "center",
+    padding: 5,
+  },
 });
 
 export default styles;

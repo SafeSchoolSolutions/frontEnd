@@ -9,9 +9,8 @@ import AuthScreen from "../../screens/auth";
 import HomeScreens from "../../screens/home";
 import MapScreen from "../../screens/home/map";
 import EmergencyScreenForm from "../../screens/home/emergency/emergencyForm";
-import EmergencyScreen from "../../screens/home/emergency";
 import Chat from "../../screens/home/emergency/emergencyChat";
-import PickerScreen from "../../screens/organzaitonPage";
+import PickerScreen from "../../screens/organizationSetup";
 const Stack = createStackNavigator();
 
 export default function MainNavigator() {
@@ -28,7 +27,7 @@ export default function MainNavigator() {
   if (!currentUserObj.loaded) {
     return (
       <View>
-        <Text>LOAD YOU </Text>
+        <Text>LOADING...</Text>
       </View>
     );
   }
@@ -63,11 +62,6 @@ export default function MainNavigator() {
                   name="Emergency Map"
                   component={MapScreen}
                   options={{ headerShown: true }}
-                />
-                <Stack.Screen
-                  name="emergencyScreen"
-                  component={EmergencyScreen}
-                  options={{ headerShown: false }}
                 />
                 <Stack.Screen
                   name="emergencyScreenForm"

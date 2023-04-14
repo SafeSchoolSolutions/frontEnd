@@ -1,0 +1,117 @@
+import { StyleSheet } from "react-native"; 
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+        backgroundColor: "#3d5a80",
+      },
+      image: {
+        flex: 0.7,
+        justifyContent: "center",
+      },
+      title: {
+        fontWeight: "800",
+        fontSize: 28,
+        marginBottom: 10,
+        color: "#98c1d9",
+        textAlign: "center",
+      },
+      description: {
+        fontWeight: "300",
+        color: "#98c1d9",
+        textAlign: "center",
+        paddingHorizontal: 64,
+      },
+      descriptions: {
+        fontWeight: "bold",
+        fontSize: 20,
+        color: "#98c1d9",
+        textAlign: "center",
+      },
+      descriptionss: {
+        marginTop: 20,
+        fontWeight: "bold",
+        fontSize: 30,
+        color: "#98c1d9",
+        textAlign: "center",
+      },
+      containers: {
+        flex: 1,
+        alignItems: "center",
+        justifyContent: "center",
+        padding: 20,
+      },
+      paragraph: {
+        fontSize: 18,
+        textAlign: "center",
+      },
+      textInput: {
+        borderColor: "#e0fbfc",
+        borderBottomWidth: 2,
+        borderStyle: "solid",
+        paddingVertical: 10,
+        paddingHorizontal: 20,
+        marginTop: 20,
+        paddingHorizontal: 40,
+        fontSize: 20,
+        placeholderTextColor: "#98c1d9",
+        color: "#98c1d9",
+      },
+      textInputs: {
+        borderColor: "#e0fbfc",
+        borderRadius: 30,
+        borderWidth: 2,
+        borderStyle: "solid",
+        paddingBottom: 160,
+        paddingVertical: 20,
+        paddingHorizontal: 20,
+        marginTop: 10,
+        paddingHorizontal: 40,
+        fontSize: 15,
+        placeholderTextColor: "#98c1d9",
+        color: "#98c1d9",
+      },
+      textInputss: {
+        borderColor: "#e0fbfc",
+        borderRadius: 30,
+        borderWidth: 2,
+        borderStyle: "solid",
+    
+        paddingVertical: 20,
+        paddingHorizontal: 20,
+        marginTop: 10,
+        paddingHorizontal: 40,
+        fontSize: 30,
+        placeholderTextColor: "#98c1d9",
+        color: "#98c1d9",
+      },
+      YesNoText: {
+        marginTop: 15,
+        paddingHorizontal: 40,
+        fontSize: 20,
+        color: "#98c1d9",
+        margin: 4,
+      },
+      YesNoButton: {
+        borderWidth: 1,
+        borderColor: "#e0fbfc",
+        borderRadius: 30,
+        backgroundColor: "#98c1d9",
+        margin: 10,
+        padding: 5,
+      },
+      buttonText: {
+        fontSize: 20,
+        color: "#e0fbfc",
+      },
+      dot: {
+        height: 10,
+        borderRadius: 5,
+        backgroundColor: "#ee6c4d",
+        marginHorizontal: 8,
+      },
+});
+
+export default styles;

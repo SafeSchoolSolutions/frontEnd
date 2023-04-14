@@ -12,7 +12,6 @@ import {
 import styles from "./styles";
 import Svg, { Ellipse, ClipPath } from "react-native-svg";
 import React, { useState, useRef, useEffect } from "react";
-import slides from "./slides";
 import Paginator from "../../components/Paginator";
 import NextButton from "../../components/NextButton";
 import OnboardingItem from "../../components/OnboardingItem";
@@ -30,15 +29,9 @@ import {
   getUsersExpoToken,
   updateUsersExpoToken,
 } from "../../redux/actions/auth";
+
+
 export default function PickerScreen() {
-  const styles = StyleSheet.create({
-    container: {
-      backgroundColor: "#3d5a80",
-      flex: 1,
-      justifyContent: "center",
-      alignItems: "center",
-    },
-  });
   const navigation = useNavigation();
   const [isModalVisible, setIsModalVisible] = React.useState(false);
   const handleModal = () => setIsModalVisible(() => !isModalVisible);
@@ -51,7 +44,6 @@ export default function PickerScreen() {
   }).current;
 
   const viewConfig = useRef({ viewAreaCoveragePercentThreshold: 50 }).current;
-  ///ww
 
   const [FormComplete, setFormComplete] = useState(false);
   const scrollTo = () => {
@@ -61,6 +53,7 @@ export default function PickerScreen() {
       setFormCompleted();
     }
   };
+
   const data = [
     {
       id: "1",
@@ -79,114 +72,26 @@ export default function PickerScreen() {
       type: "4",
     },
   ];
+
   useEffect(() => {
     handleReload();
   }, [currentIndex]);
+
+
   const [userId, setUserid] = useState("");
   const bg_image =
     "https://w0.peakpx.com/wallpaper/13/361/HD-wallpaper-watercolor-bright-colors-paint-splash-texture.jpg";
-  const hasParent = true;
+
   const handleReload = () => {
     const currentForm = getFormCompleted();
     setFormComplete(currentForm);
-    console.log(FormComplete + " QQQQQQQQQQQQ");
+    console.log("Form completed", FormComplete);
   };
+
+
   return (
     <View style={{ flex: 1 }}>
-      {!hasParent && (
-        <View
-          style={{
-            flex: 1,
-            backgroundColor: "black",
-            alignContent: "center",
-            justifyContent: "center",
-          }}
-        >
-          <View
-            style={{
-              backgroundColor: "rgb(17, 51, 46)",
-              flex: 0.8,
-              borderRadius: 40,
-            }}
-          >
-            <View style={styles.headerText}>
-              <Text
-                style={{
-                  fontSize: 30,
-                  fontWeight: "500",
-                  color: "rgb(237, 229, 204)",
-                }}
-              >
-                Share this code with your parents to get started!
-              </Text>
-            </View>
-            <View style={styles.idContainer}>
-              <Animated.View
-                entering={SlideInDown}
-                exiting={SlideOutDown}
-                style={styles.singleContainer}
-              >
-                <TouchableOpacity
-                  onPress={() => {
-                    Clipboard.setStringAsync(userId);
-                  }}
-                >
-                  <Feather
-                    name="clipboard"
-                    size={30}
-                    color="rgb(237, 229, 204)"
-                    style={{
-                      margin: 9,
-                    }}
-                  />
-                </TouchableOpacity>
-              </Animated.View>
-
-              <Animated.View
-                entering={SlideInDown}
-                exiting={SlideOutDown}
-                style={styles.singleContainer}
-              >
-                <TouchableOpacity
-                  onPress={() => {
-                    handleReload();
-                  }}
-                >
-                  <Feather
-                    name="refresh-cw"
-                    size={30}
-                    color="rgb(237, 229, 204)"
-                    style={{ margin: 9 }}
-                  />
-                </TouchableOpacity>
-              </Animated.View>
-              <Animated.View
-                entering={SlideInDown}
-                exiting={SlideOutDown}
-                style={styles.singleContainer}
-              >
-                <Text
-                  numberOfLines={1}
-                  style={{
-                    color: "rgb(237, 229, 204)",
-                    fontSize: 30,
-                    fontWeight: "500",
-                    marginTop: 9,
-                    height: 40,
-                  }}
-                >
-                  {userId.substring(0, 12)}...
-                </Text>
-              </Animated.View>
-            </View>
-          </View>
-        </View>
-      )}
-
-      {hasParent && (
         <View style={styles.container}>
-        
-       
           <View style={{ flex: 3 }}>
             <FlatList
               data={data}
@@ -217,7 +122,6 @@ export default function PickerScreen() {
             percentage={(currentIndex + 1) * (100 / slides.length)}
           />
         </View>
-      )}
     </View>
   );
 }

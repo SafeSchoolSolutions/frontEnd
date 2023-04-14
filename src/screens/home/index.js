@@ -30,6 +30,8 @@ import { Easing } from "react-native-reanimated";
 import MapScreen from "./map";
 import Modal from "react-native-modal";
 import styles from "./styles";
+
+
 export default function HomeScreens() {
   const navigation = useNavigation();
 
@@ -128,7 +130,7 @@ export default function HomeScreens() {
         style={{ flex: 0.7, alignContent: "center", justifyContent: "center" }}
       >
         <TouchableOpacity
-          style={styless.emergencyButton}
+          style={styles.emergencyButton}
           onPress={async () => {
             await startEmergency();
             navigation.navigate("emergencyScreenForm");
@@ -148,11 +150,11 @@ export default function HomeScreens() {
                   loop: true,
                 }}
                 key={index}
-                style={[StyleSheet.absoluteFillObject, styless.dot]}
+                style={[StyleSheet.absoluteFillObject, styles.dot]}
               />
             );
           })}
-          <Text style={styless.emergencyText}>Emergency</Text>
+          <Text style={styles.emergencyText}>Emergency</Text>
         </TouchableOpacity>
       </View>
       <View
@@ -177,52 +179,3 @@ export default function HomeScreens() {
     </View>
   );
 }
-
-const styless = StyleSheet.create({
-  container: {
-    backgroundColor: "#3d5a80",
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  emergencyText: {
-    fontSize: 22,
-    fontWeight: "500",
-    color: "#3d5a80",
-    textAlign: "center",
-    justifyContent: "center",
-  },
-  emergencyButton: {
-    alignSelf: "center",
-    height: 150,
-    width: 150,
-    borderRadius: 100,
-    borderColor: "#3d5a80",
-    borderWidth: 2,
-    backgroundColor: "#FF0000",
-    justifyContent: "center",
-  },
-  dot: {
-    width: 150,
-    height: 150,
-    borderRadius: 150,
-    backgroundColor: "#ee6c4d",
-  },
-  YesNoText: {
-    marginTop: 15,
-    paddingHorizontal: 40,
-    fontSize: 20,
-    color: "#98c1d9",
-    margin: 10,
-  },
-  YesNoButton: {
-    borderWidth: 1,
-    borderColor: "#e0fbfc",
-    borderRadius: 30,
-    backgroundColor: "#98c1d9",
-    margin: 10,
-    justifyContent: "center",
-    alignContent: "center",
-    padding: 5,
-  },
-});

@@ -16,28 +16,13 @@ import { useEffect } from "react";
 import Device from "expo-device";
 import * as Location from "expo-location";
 import {
-  createUserData,
   setFormCompleted,
-  setAgeDB,
-  setCholDB,
-  setEcgDB,
-  setEcgResultDB,
-  setFBSDB,
-  setHeartRateDB,
-  setPainTypeDB,
-  setResponseWilling,
-  setSexDB,
   setEmergencyAgeDB,
-  setEmergencyCholDB,
-  setEmergencyECGDB,
-  setEmergencyFBSDB,
-  setEmergencyType,
-  setVictimState,
   startEmergency,
   setLocationDB,
   setPhoneNumberDB,
   setStudentCountDB,
-  setAdressDB,
+  setAddressDB,
   setAdditionalInfoDB,
   setEmergencyRaceDB,
   setEmergencyHeightDB,
@@ -68,7 +53,8 @@ import Animated, {
 import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
 import "firebase/compat/firestore";
-import { adminFunction } from "../redux/actions/auth";
+import styles from "./styles"
+
 export default OnboardingItem = ({ item, scrollTo }) => {
   const [emergencyAge, setEmergencyAge] = useState(null);
   const [emergencySex, setEmergencySex] = useState(null);
@@ -78,15 +64,8 @@ export default OnboardingItem = ({ item, scrollTo }) => {
   const [location, setLocation] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
   const [injuredStudentList, setInjuredStudentList] = useState([]);
-  const [painType, setPainType] = useState(null);
 
-  const [fastingBloodSugar, setFastingBloodSugar] = useState(null);
-  const [ecg, setEcg] = useState(null);
   const { width } = useWindowDimensions();
-  const [emergencyData, setEmergencyData] = useState(null);
-  const [emergencySelected, setEmergencySelected] = React.useState([]);
-  const [selected, setSelected] = useState([]);
-  var wage = "";
 
   const [code, setCode] = useState(null);
   const [studentCount, setStudentCount] = useState(null);
@@ -97,14 +76,8 @@ export default OnboardingItem = ({ item, scrollTo }) => {
     { key: "1", value: "Male" },
     { key: "2", value: "Female" },
   ];
-  const susArray = [
-    { key: 1, value: "Dhdh Dhdh" },
-    { key: 2, value: "Dhdh Dhdh" },
-    { key: 3, value: "Dhdh Dhdh" },
-  ];
-  const [adress, setAdress] = useState(null);
-  const [emergencyFastingBloodSugar, setEmergencyFastingBloodSugar] =
-    useState(null);
+  const [address, setAddress] = useState(null);
+
   const getNamesFromFirestore = async () => {
     const names = [];
     console.log("Trying to get data");
@@ -138,6 +111,7 @@ export default OnboardingItem = ({ item, scrollTo }) => {
     fetchData();
   }, [item.id]);
 
+
   const codeCheck = async () => {
     console.log("Checking code : " + code);
     const snapShot = await firebase
@@ -145,7 +119,6 @@ export default OnboardingItem = ({ item, scrollTo }) => {
       .collection("users")
       .where("code", "==", String(code))
       .get()
-      .then(console.log(code + "FUCKKK"));
 
     if (!snapShot.empty) {
       firebase
@@ -166,6 +139,8 @@ export default OnboardingItem = ({ item, scrollTo }) => {
       ]);
     }
   };
+
+
   const animatedStyles = useAnimatedStyle(() => ({
     transform: [
       {
@@ -246,10 +221,10 @@ export default OnboardingItem = ({ item, scrollTo }) => {
     }
   }, [extraInfo]);
   useEffect(() => {
-    if (adress) {
-      setAdressDB(adress);
+    if (address) {
+      setAddressDB(address);
     }
-  }, [adress]);
+  }, [address]);
   useEffect(() => {
     if (phoneNumber) {
       setPhoneNumberDB(phoneNumber);
@@ -284,7 +259,7 @@ export default OnboardingItem = ({ item, scrollTo }) => {
       .catch((e) => console.log(e));
     setCode(number);
   };
-  let text = "Waiting..";
+
   if (errorMsg) {
     text = errorMsg;
   } else if (location) {
@@ -320,7 +295,7 @@ export default OnboardingItem = ({ item, scrollTo }) => {
         />
         <TextInput
           onChangeText={(text) => {
-            setAdress(text);
+            setAddress(text);
           }}
           style={styles.textInput}
           placeholder="Address/Room #"
@@ -344,7 +319,7 @@ export default OnboardingItem = ({ item, scrollTo }) => {
         <TextInput
           onChangeText={(text) => setExtraInfo(text)}
           style={styles.textInputs}
-          placeholder="EX: Between library and hallway. Tight"
+          placeholder="EX: Between library and hallway"
           placeholderTextColor={"#98c1d9"}
         />
       </View>
@@ -525,111 +500,3 @@ export default OnboardingItem = ({ item, scrollTo }) => {
     );
   }
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "#3d5a80",
-  },
-  image: {
-    flex: 0.7,
-    justifyContent: "center",
-  },
-  title: {
-    fontWeight: "800",
-    fontSize: 28,
-    marginBottom: 10,
-    color: "#98c1d9",
-    textAlign: "center",
-  },
-  description: {
-    fontWeight: "300",
-    color: "#98c1d9",
-    textAlign: "center",
-    paddingHorizontal: 64,
-  },
-  descriptions: {
-    fontWeight: "bold",
-    fontSize: 20,
-    color: "#98c1d9",
-    textAlign: "center",
-  },
-  descriptionss: {
-    marginTop: 20,
-    fontWeight: "bold",
-    fontSize: 30,
-    color: "#98c1d9",
-    textAlign: "center",
-  },
-  containers: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-    padding: 20,
-  },
-  paragraph: {
-    fontSize: 18,
-    textAlign: "center",
-  },
-  textInput: {
-    borderColor: "#e0fbfc",
-    borderBottomWidth: 2,
-    borderStyle: "solid",
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    marginTop: 20,
-    paddingHorizontal: 40,
-    fontSize: 20,
-    placeholderTextColor: "#98c1d9",
-    color: "#98c1d9",
-  },
-  textInputs: {
-    borderColor: "#e0fbfc",
-    borderRadius: 30,
-    borderWidth: 2,
-    borderStyle: "solid",
-    paddingBottom: 160,
-    paddingVertical: 20,
-    paddingHorizontal: 20,
-    marginTop: 10,
-    paddingHorizontal: 40,
-    fontSize: 15,
-    placeholderTextColor: "#98c1d9",
-    color: "#98c1d9",
-  },
-  textInputss: {
-    borderColor: "#e0fbfc",
-    borderRadius: 30,
-    borderWidth: 2,
-    borderStyle: "solid",
-
-    paddingVertical: 20,
-    paddingHorizontal: 20,
-    marginTop: 10,
-    paddingHorizontal: 40,
-    fontSize: 30,
-    placeholderTextColor: "#98c1d9",
-    color: "#98c1d9",
-  },
-  YesNoText: {
-    marginTop: 15,
-    paddingHorizontal: 40,
-    fontSize: 20,
-    color: "#98c1d9",
-    margin: 4,
-  },
-  YesNoButton: {
-    borderWidth: 1,
-    borderColor: "#e0fbfc",
-    borderRadius: 30,
-    backgroundColor: "#98c1d9",
-    margin: 10,
-    padding: 5,
-  },
-  buttonText: {
-    fontSize: 20,
-    color: "#e0fbfc",
-  },
-});
